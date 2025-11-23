@@ -1,26 +1,39 @@
 ﻿using UnityEngine;
 using static TreeEditor.TreeEditorHelper;
-using static SimpleOre;
 
 public class SimpleOre : MonoBehaviour
 {
-    public enum OreType { Normal, Ruby, Blue, Purple, Hard, Lava }
-   
+    public enum OreType
+    {
+        Normal,     // 普通矿石 - 无效果
+        Ruby,       // 红宝石矿石 - 加生命
+        Blue,       // 蓝宝石矿石 - 加攻击
+        Purple,     // 紫水晶矿石 - 加生命和攻击
+        Hard,       // 坚硬矿石 - 无法挖掘
+        Lava        // 熔岩块 - 扣生命
+    }
+    [Header("矿石类型")]
+    public OreType oreType = OreType.Normal;
 
-    public OreType oreType;
     private float digProgress = 0f;
     private bool isBeingDug = false;
 
     void Start()
     {
         gameObject.tag = "Ore";
+
+        // 确保有碰撞器
+        if (GetComponent<Collider2D>() == null)
+        {
+            gameObject.AddComponent<BoxCollider2D>();
+        }
     }
 
     void Update()
     {
         if (isBeingDug)
         {
-            digProgress += Time.deltaTime;
+            digProgress += Time.deltaTime * GameDateController.Instance.minespeed;
 
             if (digProgress >= 1f)
             {
@@ -33,14 +46,13 @@ public class SimpleOre : MonoBehaviour
     {
         if (oreType == OreType.Hard)
         {
-            Debug.Log("坚硬矿石挖不动！");
+            Debug.Log("坚硬矿石无法挖掘！");
             return;
         }
 
         if (!isBeingDug)
         {
             isBeingDug = true;
-            Debug.Log($"开始挖掘，当前进度: {digProgress:F2}");
         }
     }
 
@@ -49,59 +61,63 @@ public class SimpleOre : MonoBehaviour
         if (isBeingDug)
         {
             isBeingDug = false;
-            Debug.Log($"停止挖掘，保存进度: {digProgress:F2}");
         }
     }
 
     void CompleteDigging()
     {
-        Debug.Log($"挖掘完成！总用时: {digProgress:F2}秒");
-        ApplyEffect();
+        ApplyOreEffect();
         Destroy(gameObject);
     }
 
-    void ApplyEffect()
+    void ApplyOreEffect()
     {
-        var player = GameObject.FindWithTag("Player").GetComponent<SimplePlayer>();
-        if (player == null) return;
+        if (GameDateController.Instance == null) return;
 
+        // 使用枚举switch语句
         switch (oreType)
         {
             case OreType.Ruby:
-                player.health += 2;
-                player.maxHealth += 2;
-                Debug.Log("💖 红宝石！生命+2");
+                GameDateController.Instance.blood += 2;
                 break;
 
             case OreType.Blue:
-                player.attack += 1;
-                Debug.Log("💙 蓝宝石！攻击+1");
+                GameDateController.Instance.attack += 1;
                 break;
 
             case OreType.Purple:
-                player.health += 3;
-                player.attack += 2;
-                player.maxHealth += 3;
-                Debug.Log("💜 紫水晶！生命+3 攻击+2");
+                GameDateController.Instance.blood += 3;
+                GameDateController.Instance.attack += 2;
                 break;
 
             case OreType.Lava:
-                if (player.health > 1)
+                if (GameDateController.Instance.blood > 1)
                 {
-                    player.health -= 1;
-                    Debug.Log("🔥 熔岩！生命-1");
-                }
-                else
-                {
-                    Debug.Log("生命值过低，挖熔岩不会扣血");
+                    GameDateController.Instance.blood -= 1;
                 }
                 break;
 
             case OreType.Normal:
-                Debug.Log("普通矿石被挖掉");
+                // 普通矿石无效果
                 break;
         }
 
-        player.UpdateStats();
+        // 更新UI
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateBloodUI();
+            UIManager.Instance.UpdateAttackUI();
+
+            // 如果是宝石，增加计数
+            if (oreType == OreType.Ruby || oreType == OreType.Blue || oreType == OreType.Purple)
+            {
+                UIManager.Instance.AddGem(oreType);
+            }
+        }
     }
 }
