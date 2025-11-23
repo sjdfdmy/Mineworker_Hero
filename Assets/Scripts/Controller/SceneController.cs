@@ -23,6 +23,15 @@ public class SceneController : MonoBehaviour
         }
     }
 
+    public enum NowScene
+    {
+        Start = 0,
+        SkillTree = 1,
+        Game = 2
+    }
+
+    [Header("当前场景")]
+    public NowScene nowscene;
     [Header("切换场景过渡遮罩")]
     public GameObject sceneshader;
     [Header("淡入时间")]
@@ -36,6 +45,7 @@ public class SceneController : MonoBehaviour
     {
         sceneshader.SetActive(false);
         sceneshader.GetComponent<CanvasGroup>().alpha = 0;
+        nowscene=(NowScene)SceneManager.GetActiveScene().buildIndex;
     }
 
     void Update()
@@ -46,6 +56,7 @@ public class SceneController : MonoBehaviour
     public void ToScene(int id)
     {
         sceneshader.SetActive(true);
+        sceneshader = GameObject.Find("SceneShader");
         sceneshader.GetComponent<CanvasGroup>().alpha = 0;
         StartCoroutine(SceneShaderFade(id));
     }
@@ -62,6 +73,7 @@ public class SceneController : MonoBehaviour
         sceneshader.GetComponent<CanvasGroup>().alpha = 1;
 
         SceneManager.LoadScene(id);
+        nowscene = (NowScene)SceneManager.GetActiveScene().buildIndex;
         yield break;
     }
 }
