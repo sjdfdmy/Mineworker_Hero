@@ -12,6 +12,8 @@ public class GameStatsInitializer : MonoBehaviour
     [SerializeField] private float baseStrength = 1.0f;
     [SerializeField] private float baseMineSpeed = 1.0f;
     [SerializeField] private float baseMoveSpeed = 5.0f;
+    [SerializeField] private float baseCriticalChance = 1.0f;
+    [SerializeField] private float baseMiningFortune = 1.0f;
     
     public enum StatType { Health, Attack, Strength, MineSpeed, MoveSpeed }
     
