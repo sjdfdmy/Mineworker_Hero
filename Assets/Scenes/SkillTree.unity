@@ -4547,6 +4547,9 @@ MonoBehaviour:
   strength: 0
   minespeed: 0
   movespeed: 0
+  criticalChance: 0
+  miningFortune: 0
+  absorptionCount: 0
 --- !u!4 &1249447533
 Transform:
   m_ObjectHideFlags: 0
@@ -5726,8 +5729,54 @@ MonoBehaviour:
   baseStrength: 10
   baseMineSpeed: 100
   baseMoveSpeed: 100
+  baseCriticalChance: 1
+  baseMiningFortune: 1
   allSkills:
   - skillName: BasicReinforcement
+    bonuses:
+    - targetStat: 0
+      multiplier: 1.1
+    - targetStat: 2
+      multiplier: 1.1
+  - skillName: MiningSpeedBoost
+    bonuses:
+    - targetStat: 3
+      multiplier: 1.5
+  - skillName: GoneWithTheWind
+    bonuses:
+    - targetStat: 4
+      multiplier: 1.5
+  - skillName: ManiacMiner
+    bonuses:
+    - targetStat: 0
+      multiplier: 1.1
+    - targetStat: 2
+      multiplier: 1.1
+  - skillName: FerociousDamage
+    bonuses:
+    - targetStat: 0
+      multiplier: 1.1
+    - targetStat: 2
+      multiplier: 1.1
+  - skillName: FortunatePickaxe
+    bonuses:
+    - targetStat: 0
+      multiplier: 1.1
+    - targetStat: 2
+      multiplier: 1.1
+  - skillName: DimensionalPower
+    bonuses:
+    - targetStat: 0
+      multiplier: 1.1
+    - targetStat: 2
+      multiplier: 1.1
+  - skillName: AbsorptionShield
+    bonuses:
+    - targetStat: 0
+      multiplier: 1.1
+    - targetStat: 2
+      multiplier: 1.1
+  - skillName: HealthPool
     bonuses:
     - targetStat: 0
       multiplier: 1.1
