@@ -46,17 +46,17 @@ public class GameDateController : MonoBehaviour
         }
     }
 
-    [Header("��Ϸ��Դ")]
+    [Header("资源")]
     public List<ResourceInfo> resources;
-    [Header("��ҵ�ǰ����ֵ")]
+    [Header("生命ֵ")]
     public float blood;
-    [Header("��ҵ�ǰ������")]
+    [Header("攻击")]
     public float attack;
     [Header("��ҵ�ǰ��������")]
     public float strength;
-    [Header("��ҵ�ǰ�ڿ��ٶ�")]
+    [Header("挖矿速度")]
     public float minespeed;
-    [Header("��ҵ�ǰ�ƶ��ٶ�")]
+    [Header("移动速度")]
     public float movespeed;
     public float criticalChance;
     public float miningFortune;
@@ -116,9 +116,6 @@ public class GameDateController : MonoBehaviour
                 resources.Add(newresource);
             }
         }
-
-        int[,] matrix = RandomMatrix.GetARandomMatrix(25,12,20,20,5,35,10);
-        Debug.Log(RandomMatrix.MatrixToString(matrix));
     }
 
     void Update()

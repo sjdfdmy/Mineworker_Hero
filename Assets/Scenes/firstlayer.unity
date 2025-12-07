@@ -50837,6 +50837,9 @@ MonoBehaviour:
   strength: 0
   minespeed: 0
   movespeed: 0
+  criticalChance: 0
+  miningFortune: 0
+  absorptionCount: 0
 --- !u!4 &1205996700
 Transform:
   m_ObjectHideFlags: 0
@@ -74847,10 +74850,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -77810,6 +77813,7 @@ GameObject:
   - component: {fileID: 1913445982}
   - component: {fileID: 1913445981}
   - component: {fileID: 1913445980}
+  - component: {fileID: 1913445983}
   m_Layer: 0
   m_Name: hard (252)
   m_TagString: Untagged
@@ -77942,6 +77946,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1913445983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913445978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4c967e928ef6943b54e914c97e02a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parenttransform: {fileID: 633473843}
+  prefab: {fileID: 1253014761}
+  cellSize: {x: 1, y: 1}
+  row: 5
+  col: 8
+  start: {x: -6, y: 0}
 --- !u!1 &1913855590
 GameObject:
   m_ObjectHideFlags: 0
