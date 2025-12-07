@@ -80,13 +80,20 @@ public class PlayerSet : MonoBehaviour
     {
         if (setbtn == null)
         {
-            setbtn = GameObject.Find("SetBtn").GetComponent<Button>();
-            setbtn.onClick.RemoveAllListeners();
-            setbtn.onClick.AddListener(() =>
+            if (GameObject.Find("SetBtn") != null)
             {
-                sets.SetActive(true);
-                Time.timeScale = 0;
-            });
+                setbtn = GameObject.Find("SetBtn").GetComponent<Button>();
+                setbtn.onClick.RemoveAllListeners();
+                setbtn.onClick.AddListener(() =>
+                {
+                    sets.SetActive(true);
+                    Time.timeScale = 0;
+                });
+            }
+            else
+            {
+                Debug.Log("No setbtn");
+            }
         }
 
         if(totalvolumnslider.value != totalvolumn)

@@ -39,24 +39,24 @@ public class GameDateController : MonoBehaviour
             num = realnum;
         }
 
-        public void Addnum(int amount)
+        public void AddAResourcenum(int amount)
         {
             realnum += amount;
             num = realnum;
         }
     }
 
-    [Header("��Ϸ��Դ")]
+    [Header("资源")]
     public List<ResourceInfo> resources;
-    [Header("��ҵ�ǰ����ֵ")]
+    [Header("生命ֵ")]
     public float blood;
-    [Header("��ҵ�ǰ������")]
+    [Header("攻击")]
     public float attack;
     [Header("��ҵ�ǰ��������")]
     public float strength;
-    [Header("��ҵ�ǰ�ڿ��ٶ�")]
+    [Header("挖矿速度")]
     public float minespeed;
-    [Header("��ҵ�ǰ�ƶ��ٶ�")]
+    [Header("移动速度")]
     public float movespeed;
     public float criticalChance;
     public float miningFortune;
@@ -92,16 +92,16 @@ public class GameDateController : MonoBehaviour
 
     void Start()
     {
-        var scriptobj=Resources.FindObjectsOfTypeAll<CreateInGameResource>();
-        foreach(var obj in scriptobj)
+        var scriptobj = Resources.FindObjectsOfTypeAll<CreateInGameResource>();
+        foreach (var obj in scriptobj)
         {
             if (obj.hideFlags == HideFlags.HideAndDontSave) continue;
-            bool have=false;
-            foreach(ResourceInfo resource in resources)
+            bool have = false;
+            foreach (ResourceInfo resource in resources)
             {
-                if(resource.resource == obj)
+                if (resource.resource == obj)
                 {
-                    have= true;
+                    have = true;
                     break;
                 }
             }
@@ -112,7 +112,7 @@ public class GameDateController : MonoBehaviour
             else
             {
                 ResourceInfo newresource = new ResourceInfo();
-                newresource.SetAResource(obj,PlayerPrefs.GetInt(obj.name,0));
+                newresource.SetAResource(obj, PlayerPrefs.GetInt(obj.name, 0));
                 resources.Add(newresource);
             }
         }
@@ -123,4 +123,20 @@ public class GameDateController : MonoBehaviour
         
     }
 
+    public static void AddResource(CreateInGameResource res, int amount)
+    {
+        foreach (ResourceInfo resource in Instance.resources)
+        {
+            if (resource.resource == res)
+            {
+                resource.AddAResourcenum(amount);
+                //PlayerPrefs.SetInt(res.name, resource.realnum);
+                return;
+            }
+        }
+        ResourceInfo newresource = new ResourceInfo();
+        newresource.SetAResource(res, amount);
+        Instance.resources.Add(newresource);
+        //PlayerPrefs.SetInt(res.name, newresource.realnum);
+    }
 }
