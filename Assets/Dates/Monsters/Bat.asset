@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b6f5858767e4e419baad83ad56228d, type: 3}
   m_Name: Bat
   m_EditorClassIdentifier: 
-  ID: 0
-  MonsterName: 
-  MonsterHP: 0
-  MonsterATK: 0
-  set: {fileID: 0}
+  ID: 3
+  MonsterName: "\u8759\u8760"
+  MonsterIcon: {fileID: 21300000, guid: 62797f6cdd94c7b47afa1c02542b1d93, type: 3}
+  monsterLevel: 1
+  MonsterHP: 6
+  MonsterATK: 6
+  MonsterInfo: "\u8759\u8760"
