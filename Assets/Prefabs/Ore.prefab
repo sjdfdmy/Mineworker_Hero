@@ -101,12 +101,13 @@ MonoBehaviour:
   oreType: 0
   oreUIImage: {fileID: 0}
   oreSprites:
-  - {fileID: 21300000, guid: 591a5c5607ca10843881013016072746, type: 3}
+  - {fileID: 21300000, guid: b307acb308dfda64aab4b2d318d62bda, type: 3}
   - {fileID: 21300000, guid: 90d4a80eb2c547e4280a91f2a66e54f4, type: 3}
   - {fileID: 21300000, guid: da9de4f83ea259c4e94d9a5bc77bdd9a, type: 3}
   - {fileID: 21300000, guid: 3f3f6f4cb675fd34c8470a8716d7040e, type: 3}
   - {fileID: 21300000, guid: 4b562fb6b90a0204885a91100dbde59c, type: 3}
   - {fileID: 21300000, guid: fa4464829c38716478f5d57a322cbddb, type: 3}
+  baseDigTime: 1
 --- !u!61 &1676945972255920590
 BoxCollider2D:
   m_ObjectHideFlags: 0

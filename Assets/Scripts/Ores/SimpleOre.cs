@@ -26,16 +26,16 @@ public class SimpleOre : MonoBehaviour
     [Header("基础挖掘时间（秒）")]
     public float baseDigTime = 1.0f;
 
-    // 私有变量
-    private float digProgress = 0f;          // 当前挖掘进度（0-1）
-    private bool isBeingDug = false;         // 是否正在被挖掘
-    private float currentDigTime = 1.0f;     // 当前实际挖掘时间
-    private float lastUpdateTime = 0f;       // 上次更新时间（用于计算中断后的进度）
-    private bool isFirstDig = true;          // 是否是第一次挖掘
+    [Header("鼠标点击功能")]
+    public bool canClickToMine = true; // 是否可以通过鼠标点击挖矿
+
+    private float digProgress = 0f;
+    private bool isBeingDug = false;
+    private float currentDigTime;
+    private bool isMinedByMouse = false;
 
     void Start()
     {
-        // 设置Unity标签（用于碰撞检测）
         gameObject.tag = "Ore";
 
         if (GetComponent<Collider2D>() == null)
@@ -43,36 +43,25 @@ public class SimpleOre : MonoBehaviour
             gameObject.AddComponent<BoxCollider2D>();
         }
 
-        // 根据矿石类型设置基础挖掘时间
         SetBaseDigTime();
-
-        // 初始化挖掘时间
         UpdateDigTimeFromPlayerSpeed();
-
-        // 自动设置UI图片
         AutoSetupOreImage();
-
-        // 初始化时间戳
-        lastUpdateTime = Time.time;
     }
 
     void SetBaseDigTime()
     {
         baseDigTime = oreType switch
         {
-            OreType.Normal => 1.0f,     // 普通矿石：1秒
-            OreType.Ruby => 1.0f,       // 红宝石：1秒
-            OreType.Blue => 1.0f,       // 蓝宝石：1秒
-            OreType.Purple => 1.5f,     // 紫水晶：1.5秒（策划案要求）
-            OreType.Hard => float.MaxValue, // 坚硬矿石：无法挖掘
-            OreType.Lava => 1.0f,       // 熔岩块：1秒
+            OreType.Normal => 1.0f,
+            OreType.Ruby => 1.0f,
+            OreType.Blue => 1.0f,
+            OreType.Purple => 1.5f,
+            OreType.Hard => float.MaxValue,
+            OreType.Lava => 1.0f,
             _ => 1.0f
         };
-
-        // Debug.Log($"初始化{oreType}矿石，基础挖掘时间: {baseDigTime}秒");
     }
 
-    // 根据玩家当前的挖矿速度更新挖掘时间
     public void UpdateDigTimeFromPlayerSpeed()
     {
         if (oreType == OreType.Hard)
@@ -92,14 +81,10 @@ public class SimpleOre : MonoBehaviour
         }
     }
 
-    // 核心方法：根据oreType枚举自动设置图片
     public void AutoSetupOreImage()
     {
         if (oreUIImage == null || oreSprites == null || oreSprites.Length == 0)
-        {
-            Debug.LogError("矿石UI组件未设置完整！");
             return;
-        }
 
         int spriteIndex = (int)oreType + 1;
 
@@ -113,41 +98,15 @@ public class SimpleOre : MonoBehaviour
     {
         if (isBeingDug)
         {
-            // 实时更新挖矿速度（确保挖矿速度变化时进度正确）
-            UpdateDigTimeFromPlayerSpeed();
+            digProgress += Time.deltaTime;
 
-            // 计算时间增量
-            float deltaTime = Time.time - lastUpdateTime;
-            lastUpdateTime = Time.time;
-
-            // 计算进度增量
-            float progressIncrement = 0f;
-            if (currentDigTime > 0 && currentDigTime < float.MaxValue)
-            {
-                progressIncrement = deltaTime / currentDigTime;
-            }
-
-            // 更新进度
-            digProgress += progressIncrement;
-
-            // 限制进度在0-1之间
-            digProgress = Mathf.Clamp01(digProgress);
-
-            
-            // 检查是否完成挖掘
             if (digProgress >= 1f)
             {
                 CompleteDigging();
             }
         }
-        else
-        {
-            // 不在挖掘时也更新时间戳，防止deltaTime过大
-            lastUpdateTime = Time.time;
-        }
     }
 
-    // 开始挖掘 - 保存进度版本
     public void StartDigging()
     {
         if (oreType == OreType.Hard)
@@ -158,84 +117,56 @@ public class SimpleOre : MonoBehaviour
 
         if (!isBeingDug)
         {
-            // 重置时间戳
-            lastUpdateTime = Time.time;
-
-            // 如果是第一次挖掘，重置进度
-            if (isFirstDig)
-            {
-                digProgress = 0f;
-                isFirstDig = false;
-            }
-            else
-            {
-                // 不是第一次挖掘，保留之前的进度
-                Debug.Log($"继续挖掘{oreType}，当前进度: {digProgress:P0}");
-            }
-
-            // 更新挖矿速度
-            UpdateDigTimeFromPlayerSpeed();
-
-            // 开始挖掘
             isBeingDug = true;
-
-            // 计算预计剩余时间
-            float remainingTime = GetRemainingDigTime();
-            Debug.Log($"开始/继续挖掘{oreType}，进度: {digProgress:P0}，预计剩余时间: {remainingTime:F2}秒");
+            isMinedByMouse = false;
         }
     }
 
-    // 停止挖掘 - 保存当前进度
     public void StopDigging()
     {
         if (isBeingDug)
         {
             isBeingDug = false;
-            Debug.Log($"暂停挖掘{oreType}，保存进度: {digProgress:P0}");
         }
     }
 
-    // 完全重置挖掘进度（当玩家离开或选择重新开始时调用）
-    public void ResetDigProgress()
+    void OnMouseDown()
     {
-        digProgress = 0f;
-        isBeingDug = false;
-        isFirstDig = true;
-        Debug.Log($"重置{oreType}矿石的挖掘进度");
-    }
+        if (!canClickToMine) return;
 
-    // 获取剩余挖掘时间
-    public float GetRemainingDigTime()
-    {
-        if (oreType == OreType.Hard || currentDigTime >= float.MaxValue)
-            return float.MaxValue;
+        // 检查F键挖矿管理器
+        if (FMineModeManager.Instance == null)
+        {
+            Debug.LogWarning("F键挖矿管理器未找到！无法使用鼠标挖矿");
+            return;
+        }
 
-        float remainingProgress = 1f - digProgress;
-        return remainingProgress * currentDigTime;
-    }
-
-    // 获取当前挖掘进度（0-1）
-    public float GetDigProgress()
-    {
-        return digProgress;
-    }
-
-    // 是否正在被挖掘
-    public bool IsBeingDug()
-    {
-        return isBeingDug;
-    }
-
-    // 更新进度条视觉（如果需要的话）
-    void UpdateProgressVisual()
-    {
-        // 这里可以添加进度条UI
-        // 例如：在矿石上方显示进度条
+        // 尝试使用F键挖矿
+        if (FMineModeManager.Instance.TryUseFMouseMine())
+        {
+            // 成功使用F键挖矿
+            Debug.Log($"F键鼠标挖矿：挖掉{oreType}矿石");
+            isMinedByMouse = true;
+            ApplyOreEffect();
+            Destroy(gameObject);
+        }
+        else
+        {
+            // F键模式未激活或已使用
+            if (!FMineModeManager.Instance.isFMouseMineActive)
+            {
+                Debug.Log("请先按F键激活鼠标挖矿模式！");
+            }
+            else if (FMineModeManager.Instance.hasUsedFMouseMine)
+            {
+                Debug.Log("F键模式已使用，请再次按F键激活");
+            }
+        }
     }
 
     void CompleteDigging()
     {
-        Debug.Log($"完成挖掘{oreType}矿石");
+        isMinedByMouse = false;
         ApplyOreEffect();
         Destroy(gameObject);
     }
@@ -266,11 +197,26 @@ public class SimpleOre : MonoBehaviour
                 Debug.Log($"紫水晶！生命值+3，攻击力+2");
                 break;
 
+            case OreType.Hard:
+                Debug.Log($"坚硬矿石被挖掉，无效果");
+                break;
+
             case OreType.Lava:
-                if (GameDateController.Instance.blood > 1)
+                if (isMinedByMouse)
                 {
-                    GameDateController.Instance.blood -= 1;
-                    Debug.Log($"熔岩！生命值-1");
+                    Debug.Log($"鼠标挖掉熔岩块！不扣血");
+                }
+                else
+                {
+                    if (GameDateController.Instance.blood > 1)
+                    {
+                        GameDateController.Instance.blood -= 1;
+                        Debug.Log($"键盘挖掉熔岩块！生命值-1");
+                    }
+                    else
+                    {
+                        Debug.Log($"键盘挖掉熔岩块！生命值为1，不扣血");
+                    }
                 }
                 break;
         }
@@ -291,5 +237,4 @@ public class SimpleOre : MonoBehaviour
             }
         }
     }
-
 }

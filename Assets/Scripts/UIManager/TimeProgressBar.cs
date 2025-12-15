@@ -8,21 +8,17 @@ public class TimeProgressBar : MonoBehaviour
     public float totalTime = 60f;
     public float barMaxWidth = 400f;
 
-    [Header("角色设置")]
-    public Transform player; // 需要在Inspector中拖拽玩家对象
+    [Header("角色瞬移设置")]
+    public GameObject playerObject; // 直接拖拽玩家GameObject
+    public float playerTargetY = -25f; // 角色要移动到的Y位置（和相机一样）
 
     private float currentTime;
     private bool isTimerRunning = true;
-    private float originalBarWidth;
     private bool hasTriggered = false;
 
     void Start()
     {
         currentTime = totalTime;
-        if (timeBar != null)
-        {
-            originalBarWidth = timeBar.sizeDelta.x;
-        }
         UpdateProgressBar();
     }
 
@@ -55,28 +51,39 @@ public class TimeProgressBar : MonoBehaviour
     {
         isTimerRunning = false;
         hasTriggered = true;
-        Debug.Log("时间到！");
+        Debug.Log("时间到！开始处理角色瞬移...");
 
-        // 1. 触发相机移动
+        // 1. 先触发相机移动
         if (CameraController.Instance != null)
         {
             CameraController.Instance.StartMoveToTarget();
+        }
 
-            // 2. 角色立即出现在摄像机的目标位置
-            if (player != null)
-            {
-                // 使用公开方法获取摄像机的目标Y位置
-                float cameraTargetY = CameraController.Instance.GetTargetYPosition();
+        // 2. 强制角色瞬移到指定位置
+        MovePlayerToTarget();
+    }
 
-                // 角色立即移动到摄像机目标位置的Y坐标
-                Vector3 playerPos = player.position;
-                playerPos.y = cameraTargetY; // 使用摄像机的目标Y位置
-                player.position = playerPos;
+    void MovePlayerToTarget()
+    {
+        if (playerObject != null)
+        {
+            // 直接设置角色的位置
+            Vector3 newPosition = playerObject.transform.position;
+            newPosition.y = playerTargetY; // 移动到目标Y位置
+            playerObject.transform.position = newPosition;
 
-                Debug.Log($"角色立即出现在Y={cameraTargetY}（摄像机目标位置）");
-            }
+            Debug.Log($"角色已瞬移到 Y={playerTargetY}，位置: {newPosition}");
+
+            // 强制输出位置信息，确保确实移动了
+            Debug.Log($"移动前位置: {playerObject.transform.position}");
+            Debug.Log($"移动后位置: {newPosition}");
+        }
+        else
+        {
+            Debug.LogError("TimeProgressBar: 玩家对象未分配！请拖拽玩家到playerObject字段");
         }
     }
+
     public void ResetTimer()
     {
         currentTime = totalTime;
@@ -84,4 +91,5 @@ public class TimeProgressBar : MonoBehaviour
         hasTriggered = false;
         UpdateProgressBar();
     }
+
 }
