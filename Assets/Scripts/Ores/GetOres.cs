@@ -16,7 +16,24 @@ public class GetOres : MonoBehaviour
     [SerializeField] int hardstonenum = 35;
     [SerializeField] int lavastonenum = 10;
 
-    void Start()
+    private static GetOres instance;
+    public static GetOres Instance
+    {
+        get
+        {
+            if(instance == null)
+            {
+                instance=FindObjectOfType<GetOres>();
+                if (instance == null)
+                {
+                    Debug.Log("No GetOres");
+                }
+            }
+            return instance;
+        }
+    }
+
+    public void GettheOres()
     {
         int[,] matrix = RandomMatrix.GetARandomMatrix(row, col, rednum, bluenum, purplenum, hardstonenum, lavastonenum);
         for (int r = 0; r < row; r++)
@@ -24,11 +41,15 @@ public class GetOres : MonoBehaviour
             {
                 Vector2 localOffset = start + new Vector2(c * cellSize.x, -r * cellSize.y);
                 Vector2 worldPos = (Vector2)parenttransform.TransformPoint(localOffset);
-                GameObject one=Instantiate(prefab, worldPos, Quaternion.identity, parenttransform);
-                one.GetComponent<SimpleOre>().oreType= (SimpleOre.OreType)matrix[r, c];
+                GameObject one = Instantiate(prefab, worldPos, Quaternion.identity, parenttransform);
+                one.GetComponent<SimpleOre>().oreType = (SimpleOre.OreType)matrix[r, c];
                 one.GetComponent<SimpleOre>().oreUIImage = one.GetComponent<SpriteRenderer>();
                 one.GetComponent<SimpleOre>().AutoSetupOreImage();
             }
+    }
 
+    private void Start()
+    {
+        GettheOres();
     }
 }
