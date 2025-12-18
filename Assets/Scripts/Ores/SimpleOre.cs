@@ -149,8 +149,7 @@ public class SimpleOre : MonoBehaviour
             // 成功使用F键挖矿
             Debug.Log($"F键鼠标挖矿：挖掉{oreType}矿石");
             isMinedByMouse = true;
-            //ApplyOreEffect();
-            OreDropSpawner.Instance.DropOreIcon(this);
+            OreDropSpawner.Instance.DropOreIcon(this,true);
             ParticlesController.Instance.PlayParticle(this, 1.0f);
             Destroy(gameObject);
         }
@@ -171,8 +170,7 @@ public class SimpleOre : MonoBehaviour
     void CompleteDigging()
     {
         isMinedByMouse = false;
-        //ApplyOreEffect();
-        OreDropSpawner.Instance.DropOreIcon(this);
+        OreDropSpawner.Instance.DropOreIcon(this,false);
         ParticlesController.Instance.PlayParticle(this, 1.0f);
         Destroy(gameObject);
     }
