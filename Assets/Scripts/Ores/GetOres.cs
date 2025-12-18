@@ -5,7 +5,7 @@ using UnityEngine;
 public class GetOres : MonoBehaviour
 {
     [SerializeField] Transform parenttransform;
-    [SerializeField] GameObject prefab;   
+    [SerializeField] GameObject prefab;
     [SerializeField] Vector2 cellSize = new Vector2(1, 1); 
     [SerializeField] Vector2 start;
     [SerializeField] int row = 25;
@@ -15,27 +15,19 @@ public class GetOres : MonoBehaviour
     [SerializeField] int purplenum = 5;
     [SerializeField] int hardstonenum = 35;
     [SerializeField] int lavastonenum = 10;
-
-    private static GetOres instance;
-    public static GetOres Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                instance=FindObjectOfType<GetOres>();
-                if (instance == null)
-                {
-                    Debug.Log("No GetOres");
-                }
-            }
-            return instance;
-        }
-    }
+    [SerializeField] bool haverestrict;
 
     public void GettheOres()
     {
-        int[,] matrix = RandomMatrix.GetARandomMatrix(row, col, rednum, bluenum, purplenum, hardstonenum, lavastonenum);
+        int[,] matrix;
+        if (haverestrict)
+        {
+            matrix = RandomMatrix.GetARandomMatrix(row, col, rednum, bluenum, purplenum, hardstonenum, lavastonenum);
+        }
+        else
+        {
+            matrix = RandomMatrix.GetARandomMatrixWithoutRestrict(row, col, rednum, bluenum, purplenum, hardstonenum, lavastonenum);
+        }
         for (int r = 0; r < row; r++)
             for (int c = 0; c < col; c++)
             {

@@ -73,6 +73,12 @@ public class PlayerSet : MonoBehaviour
         volumnslider.value = isvolumn ? volumn : 0;
         voiceeffectslider.value = isvoiceeffect ? voiceeffect : 0;
 
+        setbtn.onClick.RemoveAllListeners();
+        setbtn.onClick.AddListener(() =>
+        {
+            sets.SetActive(true);
+            Time.timeScale = 0;
+        });
     }
 
 

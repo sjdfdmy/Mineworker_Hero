@@ -640,7 +640,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 2
@@ -1166,6 +1166,7 @@ MonoBehaviour:
   criticalChance: 0
   miningFortune: 0
   absorptionCount: 0
+  powerCrystalNumber: 0
 --- !u!1 &156402825
 GameObject:
   m_ObjectHideFlags: 0
@@ -1642,7 +1643,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 591a5c5607ca10843881013016072746, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b307acb308dfda64aab4b2d318d62bda, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4065,6 +4066,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694016392}
   m_CullTransparentMesh: 1
+--- !u!114 &696276869 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 595674107429305991, guid: 881ea6ad297917d44a677ff3de1432e0, type: 3}
+  m_PrefabInstance: {fileID: 2792919568790376441}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &716027449
 GameObject:
   m_ObjectHideFlags: 0
@@ -7067,7 +7079,7 @@ MonoBehaviour:
   isvolumn: 0
   voiceeffect: 0
   isvoiceeffect: 0
-  setbtn: {fileID: 0}
+  setbtn: {fileID: 696276869}
 --- !u!1 &1124740196
 GameObject:
   m_ObjectHideFlags: 0
@@ -7901,7 +7913,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4041895}
   m_HandleRect: {fileID: 4041894}
   m_Direction: 2
-  m_Value: 1.0000006
+  m_Value: 1.0000005
   m_Size: 0.48813403
   m_NumberOfSteps: 0
   m_OnValueChanged:

@@ -57,10 +57,6 @@ public class SceneController : MonoBehaviour
     {
         sceneshader.SetActive(true);
         Time.timeScale = 1;
-        //if (sceneshader == null)
-        //{
-        //    sceneshader = GameObject.Find("SceneShader");
-        //}
         sceneshader.GetComponent<CanvasGroup>().alpha = 0;
         PlayerSet.Instance.setbtn = null;
         StartCoroutine(SceneShaderFade(id));
@@ -73,7 +69,6 @@ public class SceneController : MonoBehaviour
         while (canvasGroup.alpha < 1)
         {
             time+= Time.deltaTime;
-            Debug.Log(time);
             canvasGroup.alpha=Mathf.Lerp(0,1, time / fadeintime);
             yield return null;
         }
@@ -85,7 +80,6 @@ public class SceneController : MonoBehaviour
         PlayerSet.Instance.ifbackhome.SetActive(false);
         PlayerSet.Instance.sets.SetActive(false);
         yield return new WaitForSeconds(fadetime);
-        Debug.Log("1");
         time = 0;
         while (canvasGroup.alpha >0)
         {
